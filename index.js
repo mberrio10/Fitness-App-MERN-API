@@ -9,7 +9,7 @@ const postsRoute = require('./routes/posts');
 const categoryRoute = require ('./routes/categories');
 
 dotenv.config()
-const PORT =  process.env.PORT
+const LOCAL =  process.env.LOCAL
 const MONGO = process.env.MONGO_URL
 
 const app = express();
@@ -51,6 +51,6 @@ app.use('/server/users', usersRoute)
 app.use('/server/posts', postsRoute)
 app.use('/server/categories', categoryRoute)
 
-app.listen (PORT, () => {  
+app.listen (process.env.PORT || LOCAL, () => {  
     console.log("backend is running");
 })
