@@ -28,15 +28,20 @@ router.post('/register', async (req, res)=> {
 
 router.post('/login', async (req, res) => {
   try {
-    const user = await User.findOne({username: req.body.username});
-    
     // here im checking whether if someone is trying to login then will check if that user exist or not, so if there is no user which means "true" 
     // then will log the statement on the right
-    !user && res.status(400).json("wrong user ID or Password"); 
+    // !user && res.status(400).json("wrong user ID or Password");
+    const user = await User.findOne({username: req.body.username});
+    if (!user) {
+      return res.status(400).json("wrong user ID or Password");
+    } 
     
     // here im checking if the password typed is exist/correct that is coming from hashing the user from above
+    // !validate && res.status(400).json("wrong user ID or Password");
     const validate = await bcrypt.compare(req.body.password, user.password)
-    !validate && res.status(400).json("wrong user ID or Password");
+    if (!validate) {
+      return res.status(400).json("wrong user ID or Password")
+    }
 
     // here im replacing the password with the spread operator (...) so when I/We pull the user records from the DB i will take other properties instead of passwords
     const {password, ...others} = user._doc;
