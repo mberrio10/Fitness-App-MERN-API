@@ -9,8 +9,9 @@ const postsRoute = require('./routes/posts');
 const categoryRoute = require ('./routes/categories');
 
 dotenv.config()
-const LOCAL =  process.env.LOCAL
+const LOCAL =  process.env.SERVER_LOCAL
 const MONGO = process.env.MONGO_URL
+const CLIENT = process.env.REACT_APP_CLIENT
 
 const app = express();
 
@@ -44,6 +45,11 @@ app.post('/server/upload', upload.single("file"), (req, res) => {
   res.status(200).json('Files has been uploaded')
 })  
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", CLIENT); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 // in here we use the app.use to start sending data to our DB, and i can use the Postman to test using localhost:5000/server/auth/register
 // creating a route for ex /server/auth and then we step in to the authRoute to grab the /register from the auth.js file 
 app.use('/server/auth', authRoute)
